@@ -1,0 +1,122 @@
+package javaapplication97;
+
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import model.Zaposleni;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+
+public class JavaApplication97 {
+
+    public static void main(String[] args) {
+       
+        Configuration config = new Configuration();
+        config.configure();
+        StandardServiceRegistryBuilder srb = new StandardServiceRegistryBuilder();
+        srb.applySettings(config.getProperties());
+        ServiceRegistry servis = srb.build();
+        //ServiceRegistry servis = new StandardServiceRegistryBuilder().build();
+        SessionFactory fabrikaSesija = config.buildSessionFactory(servis);
+        Session sesija = fabrikaSesija.openSession();
+        
+        Scanner s = new Scanner(System.in);
+        
+System.out.println("Unesite opciju:\n1. Prikaz svih zaposlenih\n2. Prikaz zaposlenih po visini plate\n3. Izmena plate\n"
++ "4. Brisanje zaposlenih po id-u\n5. Unos novih zaposlenih");
+        
+        int name = s.nextInt();// Scanner scanner
+        Zaposleni p = new Zaposleni();
+        List<Zaposleni> zap;
+        Criteria crit;
+        switch(name){
+            case 1:
+            p = new Zaposleni();   
+            zap = new ArrayList<Zaposleni>();
+            sesija.beginTransaction();
+            crit = sesija.createCriteria(Zaposleni.class);
+            zap = crit.list();
+            System.out.println("Imena zaposlenih :");
+            for(Zaposleni zaposlen : zap){
+            System.out.println(zaposlen.ime);
+            }
+            sesija.getTransaction().commit();
+            sesija.close();      
+                break;
+                
+            case 2:
+            System.out.println("Po kojem kriterijumu plate : \nPlata Veca od:" ); 
+            int opcija = s.nextInt(); 
+            p = new Zaposleni();   
+            zap = new ArrayList<Zaposleni>();
+            sesija.beginTransaction();
+            crit = sesija.createCriteria(Zaposleni.class);
+            zap = crit.list();
+            System.out.println("Imena zaposlenih :");
+            for(Zaposleni zaposlen : zap){
+            if(zaposlen.plata>opcija){
+            System.out.println(zaposlen.ime);}
+            }
+            sesija.getTransaction().commit();
+            sesija.close();      
+                break;
+                
+            case 3:
+            System.out.println("Izmena podataka se vrsi na osnovu odabira zaposlenog po Id-u.\nId zaposlenog:");
+            p = new Zaposleni();
+            p.id = s.nextInt();
+            System.out.println("Unesite novu adresu");
+            p.adresa = s.nextLine();//ne znam zasto, ali prvi skener ovde ne radi 
+            p.adresa = s.nextLine();
+            System.out.println("Unesite novo ime i prezime");
+            p.ime = s.nextLine();
+            System.out.println("Unesite starost");
+            p.starost = s.nextInt();
+            System.out.println("Unesite novu platu");
+            p.plata = s.nextInt();    
+            sesija.beginTransaction();
+            sesija.update(p);
+            sesija.getTransaction().commit();
+            sesija.close();  
+               System.out.println("Uspesan unos podataka"); 
+                break;
+                
+            case 4:
+            p = new Zaposleni();    
+            System.out.println("Obrisi iz baze podataka osobu sa id-em");
+            p.id = s.nextInt();
+            sesija.beginTransaction();
+            sesija.delete(p);
+            sesija.getTransaction().commit();
+            System.out.println("Uspesna operacija"); 
+                break;
+                
+            case 5:
+            p = new Zaposleni();  
+            System.out.println("Unesite adresu");
+            p.adresa = s.nextLine();//ne znam zasto, ali prvi skener ovde ne radi 
+            p.adresa = s.nextLine();
+            System.out.println("Unesite ime i prezime");
+            p.ime = s.nextLine();
+            System.out.println("Unesite starost");
+            p.starost = s.nextInt();
+            System.out.println("Unesite platu");
+            p.plata = s.nextInt();    
+            sesija.beginTransaction();
+            sesija.save(p);
+            sesija.getTransaction().commit();
+            sesija.close();  
+                break;
+            default:
+                System.out.println("Izabrana opcija nije u ponudi!!!");
+                break;
+        }
+        
+       
+    }
+    }
