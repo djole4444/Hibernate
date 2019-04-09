@@ -1,0 +1,18 @@
+package model;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class Zaposleni {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int id;    
+    public String ime;
+    public String adresa;
+    public int starost;
+    public int plata;
+}
